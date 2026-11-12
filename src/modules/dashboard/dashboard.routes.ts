@@ -8,12 +8,11 @@ import { signPreview } from "../../utils/jwt.js";
 import { ok } from "../../utils/response.js";
 import { ContentType } from "../entries/contentType.model.js";
 import { Entry } from "../entries/entry.model.js";
-import { Media } from "../media/media.model.js";
 import { Page } from "../pages/page.model.js";
 import { Section } from "../sections/section.model.js";
-import { Submission } from "../submissions/submission.model.js";
 import { User } from "../users/user.model.js";
 import { recentActivity } from "./activity.service.js";
+import { activityStats, mediaStats, submissionStats } from "./dashboard.stats.js";
 
 export const dashboardRoutes = Router();
 
@@ -21,7 +20,7 @@ dashboardRoutes.get("/", authorize("content:read"), async (req: Request, res: Re
   const actor = currentUser(req);
   const visibleSections = can(actor.role, "settings:manage") ? {} : { restricted: { $ne: true } };
 
-  const [pages, sections, hiddenSections, sectionDrafts, entryStats, types, media, users, pendingSubmissions, activity, recentSections, recentEntries] =
+  const [pages, sections, hiddenSections, sectionDrafts, entryStats, types, media, users, submissions, activity, activityFigures, recentSections, recentEntries] =
     await Promise.all([
       Page.countDocuments(),
       Section.countDocuments(visibleSections),
@@ -38,10 +37,11 @@ dashboardRoutes.get("/", authorize("content:read"), async (req: Request, res: Re
         },
       ]),
       ContentType.find().sort({ order: 1 }).select("key label").lean(),
-      Media.aggregate<{ _id: null; count: number; size: number }>([{ $group: { _id: null, count: { $sum: 1 }, size: { $sum: "$size" } } }]),
+      mediaStats(),
       can(actor.role, "users:read") ? User.countDocuments({ active: true }) : Promise.resolve(null),
-      can(actor.role, "submissions:read") ? Submission.countDocuments({ status: "pending" }) : Promise.resolve(null),
-      can(actor.role, "activity:read") ? recentActivity(12) : Promise.resolve([]),
+      can(actor.role, "submissions:read") ? submissionStats() : Promise.resolve(null),
+      can(actor.role, "activity:read") ? recentActivity(8) : Promise.resolve([]),
+      can(actor.role, "activity:read") ? activityStats() : Promise.resolve(null),
       Section.find(visibleSections).sort({ updatedAt: -1 }).limit(6).select("page key label updatedAt updatedByName visible draft").lean(),
       Entry.find().sort({ updatedAt: -1 }).limit(6).select("type title updatedAt updatedByName visible draft").lean(),
     ]);
@@ -57,13 +57,23 @@ dashboardRoutes.get("/", authorize("content:read"), async (req: Request, res: Re
       entries: entriesTotal,
       hiddenEntries: entryStats.reduce((n, e) => n + e.hidden, 0),
       drafts: sectionDrafts + entryStats.reduce((n, e) => n + e.drafts, 0),
-      media: media[0]?.count ?? 0,
-      mediaBytes: media[0]?.size ?? 0,
+      sectionDrafts,
+      media: media.reduce((n, m) => n + m.count, 0),
+      mediaBytes: media.reduce((n, m) => n + m.size, 0),
       users,
-      /** Form submissions nobody has looked at yet; null when the role cannot see them. */
-      pendingSubmissions,
     },
-    contentTypes: types.map((t) => ({ key: t.key, label: t.label, total: byType.get(t.key)?.total ?? 0 })),
+    contentTypes: types.map((t) => ({
+      key: t.key,
+      label: t.label,
+      total: byType.get(t.key)?.total ?? 0,
+      hidden: byType.get(t.key)?.hidden ?? 0,
+      drafts: byType.get(t.key)?.drafts ?? 0,
+    })),
+    mediaKinds: media,
+    /** Figures of the forms inbox; null when the role cannot see the submissions. */
+    submissions,
+    /** Figures of the team's activity over 30 days; null when the role cannot see the journal. */
+    activityStats: activityFigures,
     recent: [
       ...recentSections.map((s) => ({
         kind: "section" as const,
