@@ -1,5 +1,5 @@
 import type { ContentValue, FieldDef } from "../types/content.js";
-import { youtubeId } from "./youtube.js";
+import { isVideoFile, youtubeId } from "./youtube.js";
 
 const IMAGE_VALUE = /\.(jpe?g|png|svg|webp|gif|avif)(\?.*)?$/i;
 const IMAGE_KEY = /(image|photo|poster|thumb|logo|cover|picture|src|avatar|banner|background)$/i;
@@ -232,6 +232,9 @@ function sanitizeValue(field: FieldDef, raw: unknown, path: string, issues: Cont
       }
       if (field.type === "youtube" && !youtubeId(value)) {
         issues.push({ path, message: `« ${field.label} » doit être le lien d'une vidéo YouTube (https://www.youtube.com/watch?v=…)` });
+      }
+      if (field.type === "video" && !youtubeId(value) && !isVideoFile(value)) {
+        issues.push({ path, message: `« ${field.label} » doit être le lien d'une vidéo YouTube ou une vidéo importée (MP4, WebM)` });
       }
       if (field.type === "image" && !SAFE_MEDIA.test(value)) {
         issues.push({ path, message: `« ${field.label} » doit pointer vers un média valide` });

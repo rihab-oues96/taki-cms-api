@@ -90,7 +90,7 @@ export default defineSeed({
         cta: { label: "Bouton principal" },
         video: { label: "Vidéos (libellés et réglages)" },
         "video.backgroundTitle": { label: "Titre de la vidéo d'arrière-plan (accessibilité)" },
-        "video.backgroundStart": { label: "Début de la vidéo d'arrière-plan (secondes)" },
+        "video.backgroundStart": { label: "Début de la vidéo d'arrière-plan (secondes)", help: "Pour une vidéo YouTube uniquement." },
         "video.playLabel": { label: "Libellé « lire »" },
         "video.pauseLabel": { label: "Libellé « pause »" },
         "video.filmTitle": { label: "Titre de la fenêtre vidéo" },

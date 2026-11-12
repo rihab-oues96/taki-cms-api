@@ -18,6 +18,11 @@ export function youtubeId(link: string): string {
   }
 }
 
+/** True for the address of a video file (uploaded to the media library or hosted elsewhere). */
+export function isVideoFile(value: string): boolean {
+  return /^(\/(?!\/)|https?:\/\/)[^\s]+\.(mp4|webm)(\?[^\s]*)?$/i.test(value);
+}
+
 export function youtubeLink(id: string, short = false): string {
   return short ? `https://www.youtube.com/shorts/${id}` : `https://www.youtube.com/watch?v=${id}`;
 }

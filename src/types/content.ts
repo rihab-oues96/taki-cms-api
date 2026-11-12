@@ -5,6 +5,7 @@ export const FIELD_TYPES = [
   "image",
   "url",
   "youtube",
+  "video",
   "number",
   "boolean",
   "select",
@@ -21,6 +22,7 @@ export type FieldType = (typeof FIELD_TYPES)[number];
  * - `richtext` is plain text with a tiny inline markup: `*mot*` highlights a word,
  *   a line break starts a new line.
  * - `youtube` is the full link of a YouTube video, as copied from the address bar or "Share".
+ * - `video` is either a YouTube link or the address of a video file from the media library.
  * - `group` nests `fields`; `list` repeats `item` (any definition, including a group).
  */
 export interface FieldDef {
