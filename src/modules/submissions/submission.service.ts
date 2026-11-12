@@ -278,6 +278,7 @@ export async function getCv(id: string) {
   const ext = doc.cv.filename.split(".").pop() ?? "pdf";
   return {
     path: cvPath(doc.cv),
+    filename: doc.cv.filename,
     mimeType: doc.cv.mimeType,
     // Built here rather than taken from the visitor's file name.
     downloadName: `CV-${slugify(doc.name).slice(0, 60) || "candidat"}-${doc.reference}.${ext}`,

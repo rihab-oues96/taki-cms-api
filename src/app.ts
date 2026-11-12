@@ -20,6 +20,7 @@ import { publicSubmissionRoutes, submissionRoutes } from "./modules/submissions/
 import { userRoutes } from "./modules/users/user.routes.js";
 import { logger } from "./utils/logger.js";
 import { ok } from "./utils/response.js";
+import { inDb, sendDbFile } from "./utils/storage.js";
 
 export function createApp() {
   const app = express();
@@ -33,6 +34,19 @@ export function createApp() {
   app.use(cors({ origin: env.CORS_ORIGINS, credentials: true, methods: ["GET", "POST", "PUT", "PATCH", "DELETE"] }));
 
   // Uploaded files: never executed, never sniffed, cached for a long time (names are unique).
+  const uploadHeaders = (res: express.Response) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; sandbox");
+  };
+  if (inDb) {
+    app.get("/uploads/:filename", async (req, res, next) => {
+      uploadHeaders(res);
+      res.setHeader("Cache-Control", "public, max-age=2592000, immutable");
+      if (await sendDbFile(req, res, "uploads", String(req.params.filename), { cache: true })) return;
+      res.removeHeader("Cache-Control");
+      next();
+    });
+  }
   app.use(
     "/uploads",
     express.static(env.uploadDir, {
@@ -40,10 +54,7 @@ export function createApp() {
       dotfiles: "deny",
       maxAge: "30d",
       immutable: true,
-      setHeaders: (res) => {
-        res.setHeader("X-Content-Type-Options", "nosniff");
-        res.setHeader("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; sandbox");
-      },
+      setHeaders: uploadHeaders,
     }),
   );
 

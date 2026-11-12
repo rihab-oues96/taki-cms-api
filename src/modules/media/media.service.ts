@@ -1,11 +1,10 @@
 import { randomBytes } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { env } from "../../config/env.js";
 import type { AuthUser } from "../../types/express.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { countReferences, replaceReferences } from "../../utils/fields.js";
 import { logger } from "../../utils/logger.js";
+import { deleteFile, putFile } from "../../utils/storage.js";
 import { escapeRegex, slugify } from "../../utils/text.js";
 import { Entry } from "../entries/entry.model.js";
 import { Section } from "../sections/section.model.js";
@@ -45,14 +44,13 @@ async function store(file: Express.Multer.File) {
   // The stored name never comes from the client: no path traversal, no overwrite, no executable extension.
   const base = slugify(path.parse(file.originalname).name).slice(0, 40) || "fichier";
   const filename = `${base}-${randomBytes(6).toString("hex")}.${rule.ext}`;
-  await mkdir(env.uploadDir, { recursive: true });
-  await writeFile(path.join(env.uploadDir, filename), file.buffer, { flag: "wx" });
+  await putFile("uploads", filename, file.buffer, rule.mime);
   return { filename, url: `/uploads/${filename}`, rule };
 }
 
 async function removeFile(filename: string) {
   try {
-    await unlink(path.join(env.uploadDir, path.basename(filename)));
+    await deleteFile("uploads", filename);
   } catch (err) {
     logger.warn({ err: (err as Error).message, filename }, "Could not delete media file");
   }

@@ -1,0 +1,37 @@
+# Render blueprint: the API on the free plan, files stored in MongoDB (the free plan has no persistent disk).
+services:
+  - type: web
+    name: taki-cms-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: FILE_STORAGE
+        value: db
+      - key: COOKIE_SECURE
+        value: "true"
+      # MongoDB Atlas connection string, with the database name: ...mongodb.net/taki_cms
+      - key: MONGODB_URI
+        sync: false
+      # Origin of the backoffice, e.g. https://taki-backoffice.vercel.app (no trailing slash)
+      - key: CORS_ORIGINS
+        sync: false
+      # Public website, e.g. https://www.example.com
+      - key: SITE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      # The next three are shared with the website (CMS_REVALIDATE_SECRET, CMS_PREVIEW_SECRET, CMS_FORMS_SECRET)
+      - key: SITE_REVALIDATE_SECRET
+        generateValue: true
+      - key: PREVIEW_SECRET
+        generateValue: true
+      - key: FORMS_SECRET
+        generateValue: true

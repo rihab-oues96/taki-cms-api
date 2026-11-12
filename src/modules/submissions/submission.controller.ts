@@ -5,6 +5,7 @@ import { param } from "../../middleware/validate.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { logger } from "../../utils/logger.js";
 import { created, ok, pageMeta } from "../../utils/response.js";
+import { inDb, sendDbFile } from "../../utils/storage.js";
 import { logActivity } from "../dashboard/activity.service.js";
 import type { SubmissionType } from "./submission.model.js";
 import * as service from "./submission.service.js";
@@ -87,6 +88,11 @@ function asDownload(res: Response, filename: string, contentType: string) {
 export async function downloadCv(req: Request, res: Response) {
   const cv = await service.getCv(param(req, "id"));
   asDownload(res, cv.downloadName, cv.mimeType);
+  if (inDb) {
+    if (await sendDbFile(req, res, "cv", cv.filename, { cache: false })) return;
+    for (const header of ["Content-Type", "Content-Disposition"]) res.removeHeader(header);
+    throw ApiError.notFound("Le fichier du CV est introuvable");
+  }
   await new Promise<void>((resolve, reject) => {
     res.sendFile(cv.path, { dotfiles: "deny", cacheControl: false, lastModified: false, etag: false }, (err) => {
       if (!err) return resolve();

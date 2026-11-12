@@ -28,6 +28,8 @@ const schema = z.object({
   PREVIEW_SECRET: z.string().min(8),
   UPLOAD_DIR: z.string().default("uploads"),
   PRIVATE_UPLOAD_DIR: z.string().default("private-uploads"),
+  /** `db` keeps uploaded files in MongoDB instead of the disk (hosts without a persistent volume). */
+  FILE_STORAGE: z.enum(["disk", "db"]).default("disk"),
   FORMS_SECRET: z.string().min(16, "FORMS_SECRET must be at least 16 characters"),
   SEED_ADMIN_NAME: z.string().default("Super Admin"),
   SEED_ADMIN_EMAIL: z.string().email().optional(),

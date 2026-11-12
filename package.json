@@ -16,6 +16,7 @@
     "migrate:youtube-links": "tsx src/seed/youtube-links.ts",
     "migrate:forms": "tsx src/seed/forms.ts",
     "migrate:team": "tsx src/seed/team.ts",
+    "migrate:files": "tsx src/seed/files-to-db.ts",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down"
   },

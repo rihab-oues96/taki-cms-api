@@ -1,10 +1,9 @@
 import { randomBytes } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import multer from "multer";
-import { env } from "../../config/env.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { logger } from "../../utils/logger.js";
+import { deleteFile, diskPath, putFile } from "../../utils/storage.js";
 import type { CvFile } from "./submission.model.js";
 
 /**
@@ -17,8 +16,6 @@ import type { CvFile } from "./submission.model.js";
  * - only PDF and Word (.docx) are accepted; documents carrying macros are refused.
  */
 export const CV_MAX_BYTES = 5 * 1024 * 1024;
-
-const CV_DIR = path.join(env.privateUploadDir, "cv");
 
 interface CvRule {
   mime: string;
@@ -57,18 +54,17 @@ export function checkCv(file: Express.Multer.File | undefined): CvRule {
 /** Writes a checked CV under a random name: nothing in the path comes from the visitor. */
 export async function storeCv(file: Express.Multer.File, rule: CvRule): Promise<CvFile> {
   const filename = `${randomBytes(16).toString("hex")}.${rule.ext}`;
-  await mkdir(CV_DIR, { recursive: true });
-  await writeFile(path.join(CV_DIR, filename), file.buffer, { flag: "wx", mode: 0o600 });
+  await putFile("cv", filename, file.buffer, rule.mime);
   // eslint-disable-next-line no-control-regex
   const originalName = path.basename(file.originalname).replace(/[\u0000-\u001F\u007F]/g, "").slice(0, 200) || `cv.${rule.ext}`;
   return { filename, originalName, mimeType: rule.mime, size: file.size };
 }
 
-export const cvPath = (cv: Pick<CvFile, "filename">) => path.join(CV_DIR, path.basename(cv.filename));
+export const cvPath = (cv: Pick<CvFile, "filename">) => diskPath("cv", cv.filename);
 
 export async function removeCv(cv: Pick<CvFile, "filename">): Promise<void> {
   try {
-    await unlink(cvPath(cv));
+    await deleteFile("cv", cv.filename);
   } catch (err) {
     logger.warn({ err: (err as Error).message, filename: cv.filename }, "Could not delete CV file");
   }
