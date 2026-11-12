@@ -1,0 +1,14 @@
+# Dedicated MongoDB for the Taki Academy CMS.
+# Exposed on 27018 so it never collides with another MongoDB on the default port.
+services:
+  mongo:
+    image: mongo:7
+    container_name: taki-cms-mongo
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:27018:27017"
+    volumes:
+      - taki-cms-mongo-data:/data/db
+
+volumes:
+  taki-cms-mongo-data:

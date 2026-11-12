@@ -1,0 +1,221 @@
+import { defineSeed } from "../helpers.js";
+
+const NETWORK = {
+  label: "Réseau",
+  type: "select" as const,
+  help: "Le lien vient de Éléments communs › Identité et coordonnées › Réseaux sociaux.",
+  options: [
+    { value: "instagram", label: "Instagram" },
+    { value: "facebook", label: "Facebook" },
+    { value: "youtube", label: "YouTube" },
+    { value: "linkedin", label: "LinkedIn" },
+  ],
+};
+
+/** Page « Vie scolaire » (/scholar-life). Les vidéos elles-mêmes sont dans Contenus › Vidéos de l'école. */
+export default defineSeed({
+  pages: [{ key: "vie-scolaire", label: "Vie scolaire", path: "/scholar-life", description: "La vie à l'école : vidéos, sorties, clubs, bibliothèque, droits et devoirs." }],
+  sections: [
+    {
+      page: "vie-scolaire",
+      key: "seo",
+      label: "Référencement",
+      description: "Titre et description de la page pour Google et les réseaux sociaux.",
+      content: {
+        title: "Vie scolaire",
+        description: "La vie à Taki Academy en images : vidéos, sorties scolaires, clubs, bibliothèque, droits et devoirs des élèves.",
+      },
+      overrides: { title: { type: "text", label: "Titre de la page" } },
+    },
+    {
+      page: "vie-scolaire",
+      key: "hero",
+      label: "Bandeau d'en-tête",
+      description: "Titre, introduction et boutons en haut de la page.",
+      content: {
+        eyebrow: "Vie scolaire",
+        title: "La vie à l’école, *en images*.",
+        lead: "À TakiAcademy, la vie scolaire s’appuie sur la communauté et l’inclusion. Elle intègre les valeurs de l’IB pour valoriser chaque élève et favoriser son engagement.",
+        primaryCta: { label: "Voir toutes nos vidéos", href: "#videos" },
+        secondaryCta: { label: "Pré-inscription", href: "/admission" },
+      },
+    },
+    {
+      page: "vie-scolaire",
+      key: "reel",
+      label: "Carrousel de vidéos courtes",
+      description: "Bande défilante de shorts sous le bandeau. Chaque vidéo doit exister dans Contenus › Vidéos de l'école.",
+      content: {
+        ariaLabel: "Les dernières vidéos de l’école",
+        slideLabel: "{n} sur {total}",
+        paginationLabel: "Vidéos",
+        videoIds: [
+          "https://www.youtube.com/shorts/OGEgn4PXJUQ",
+          "https://www.youtube.com/shorts/FbQW6uC6Iv0",
+          "https://www.youtube.com/shorts/cvaUBFOD3Z0",
+          "https://www.youtube.com/shorts/jubsCcyooIQ",
+          "https://www.youtube.com/shorts/x5IyEv4z2Ik",
+          "https://www.youtube.com/shorts/Vy-DMChuwt4",
+          "https://www.youtube.com/shorts/sPvUT4VxuqY",
+          "https://www.youtube.com/shorts/QrnVXf3KLTE",
+          "https://www.youtube.com/shorts/u9skrLrltq4",
+          "https://www.youtube.com/shorts/y7NgnpmFoC0",
+          "https://www.youtube.com/shorts/-Et51Biap1I",
+          "https://www.youtube.com/shorts/WRDE8E_-2dU",
+          "https://www.youtube.com/shorts/TxGDiFXCj2E",
+          "https://www.youtube.com/shorts/efQ7Mp7xCCQ",
+        ],
+      },
+      overrides: {
+        ariaLabel: { label: "Nom du carrousel (accessibilité)" },
+        slideLabel: { label: "Nom d'une diapositive (accessibilité)", help: "{n} et {total} sont remplacés par les numéros." },
+        paginationLabel: { label: "Nom des points de pagination (accessibilité)" },
+        videoIds: {
+          label: "Vidéos (liens YouTube, dans l'ordre)",
+          help: "Collez le lien de chaque vidéo, copié depuis YouTube.",
+        },
+        "videoIds[]": { label: "Lien YouTube", type: "youtube" },
+      },
+    },
+    {
+      page: "vie-scolaire",
+      key: "tabs",
+      label: "Sorties scolaires et clubs (onglets)",
+      description: "Bloc à onglets « Au-delà de la classe », avec deux vidéos par onglet.",
+      content: {
+        eyebrow: "Au-delà de la classe",
+        title: "Apprendre en sortant, *grandir ensemble*.",
+        ariaLabel: "Sorties et clubs",
+        tabs: [
+          {
+            key: "sorties",
+            label: "Sorties scolaires",
+            kicker: "Sorties & actions humanitaires",
+            title: "Des apprentissages concrets, hors des murs",
+            text: [
+              "Les sorties pédagogiques donnent une dimension concrète aux apprentissages. Musées et sites patrimoniaux sont visités tout au long de l’année pour explorer les richesses naturelles et culturelles de notre environnement.",
+              "Engagés pour l’altruisme et la solidarité, nos élèves participent aussi à des actions humanitaires.",
+            ],
+            videoIds: ["https://www.youtube.com/shorts/jubsCcyooIQ", "https://www.youtube.com/shorts/OGEgn4PXJUQ"],
+          },
+          {
+            key: "clubs",
+            label: "Les clubs",
+            kicker: "Sport, art & culture",
+            title: "Des passions qui créent des liens",
+            text: [
+              "Les clubs permettent aux élèves de cultiver leurs talents sportifs, artistiques ou culturels, au service de leur épanouissement et de leur réussite.",
+              "Ils renforcent le sentiment d’appartenance à l’école et les liens entre les élèves.",
+            ],
+            videoIds: ["https://www.youtube.com/shorts/FbQW6uC6Iv0", "https://www.youtube.com/shorts/x5IyEv4z2Ik"],
+          },
+        ],
+      },
+      overrides: {
+        ariaLabel: { label: "Nom du groupe d'onglets (accessibilité)" },
+        "tabs[].key": { label: "Identifiant technique (sans espace)", help: "Sert d'ancre ; ne pas modifier sans raison." },
+        "tabs[].label": { label: "Nom de l'onglet" },
+        "tabs[].title": { type: "text" },
+        "tabs[].text": { label: "Paragraphes" },
+        "tabs[].text[]": { type: "textarea", label: "Paragraphe" },
+        "tabs[].videoIds": { label: "Vidéos (liens YouTube)", help: "Chaque vidéo doit exister dans Contenus › Vidéos de l'école." },
+        "tabs[].videoIds[]": { label: "Lien YouTube", type: "youtube" },
+      },
+    },
+    {
+      page: "vie-scolaire",
+      key: "library",
+      label: "La bibliothèque",
+      description: "Photo et citation sur la bibliothèque.",
+      content: {
+        image: "/media/vie/library.jpg",
+        alt: "La bibliothèque de TakiAcademy International School",
+        eyebrow: "La bibliothèque",
+        title: "Le cœur de l’apprentissage *au PEI*.",
+        quote:
+          "Une bibliothèque est conçue de manière à maximiser son efficacité : les bibliothèques sont des combinaisons de personnes, d’espaces, de collections et de services qui facilitent et renforcent l’enseignement et l’apprentissage.",
+        cite: "Définition du Programme d’éducation intermédiaire",
+      },
+      overrides: { cite: { label: "Source de la citation" } },
+    },
+    {
+      page: "vie-scolaire",
+      key: "rights",
+      label: "Droits et devoirs",
+      description: "Les engagements des élèves, numérotés automatiquement.",
+      content: {
+        eyebrow: "Droits et devoirs",
+        title: "Cinq engagements, *une communauté*.",
+        lead: "Chaque élève a des droits qui garantissent son bien-être. En contrepartie, ses devoirs encouragent la discipline et le respect au sein de l’école.",
+        items: [
+          { title: "Ponctualité", text: "Être ponctuel, porter son uniforme et respecter le rang." },
+          { title: "Politesse", text: "Être poli envers ses pairs et les adultes de l’école." },
+          { title: "Non-violence", text: "Ne jamais recourir à la violence, verbale ou physique, pour résoudre un conflit." },
+          { title: "Sécurité", text: "Éviter toute manipulation dangereuse pour soi-même ou pour les autres." },
+          { title: "Calme et discipline", text: "Ne pas perturber le fonctionnement de la classe ou de l’école." },
+        ],
+      },
+      overrides: { items: { label: "Engagements" }, "items[].title": { type: "text" }, "items[].text": { type: "textarea" } },
+    },
+    {
+      page: "vie-scolaire",
+      key: "videos",
+      label: "Vidéothèque",
+      description: "Titre, filtres et bouton de la grille de toutes les vidéos (Contenus › Vidéos de l'école).",
+      content: {
+        eyebrow: "Nos vidéos",
+        title: "Toute la vie de l’école, *en vidéo*.",
+        lead: "Activités, sorties, journées portes ouvertes, témoignages de parents et d’élèves : retrouvez ici toutes nos vidéos.",
+        filterAriaLabel: "Filtrer les vidéos",
+        allLabel: "Tout",
+        moreLabel: "Voir plus de vidéos",
+        categories: [
+          { key: "ecole", label: "Vie à l'école" },
+          { key: "events", label: "Portes ouvertes" },
+          { key: "temoignages", label: "Témoignages" },
+          { key: "ib", label: "L'IB expliqué" },
+        ],
+      },
+      overrides: {
+        filterAriaLabel: { label: "Nom du groupe de filtres (accessibilité)" },
+        allLabel: { label: "Libellé du filtre « tout »" },
+        moreLabel: { label: "Bouton « voir plus »" },
+        categories: { label: "Filtres par catégorie" },
+        "categories[].key": {
+          label: "Catégorie",
+          type: "select",
+          options: [
+            { value: "ecole", label: "ecole" },
+            { value: "events", label: "events" },
+            { value: "temoignages", label: "temoignages" },
+            { value: "ib", label: "ib" },
+          ],
+        },
+        "categories[].label": { label: "Nom affiché" },
+      },
+    },
+    {
+      page: "vie-scolaire",
+      key: "social",
+      label: "Suivez-nous (réseaux sociaux)",
+      description: "Liste des réseaux sociaux en bas de page.",
+      content: {
+        eyebrow: "Suivez-nous",
+        title: "La vie de l’école, *au jour le jour*.",
+        lead: "Photos, reels et actualités : retrouvez chaque moment sur nos réseaux.",
+        items: [
+          { network: "instagram", name: "Instagram", handle: "@takiacademy.international", desc: "Photos et reels du quotidien" },
+          { network: "facebook", name: "Facebook", handle: "TakiAcademy.International", desc: "Actualités et événements" },
+          { network: "youtube", name: "YouTube", handle: "@TakiAcademy.International", desc: "Toutes nos vidéos" },
+          { network: "linkedin", name: "LinkedIn", handle: "TakiAcademy International School", desc: "La vie de l’établissement" },
+        ],
+      },
+      overrides: {
+        items: { label: "Réseaux" },
+        "items[].network": NETWORK,
+        "items[].name": { label: "Nom affiché" },
+        "items[].handle": { label: "Nom du compte" },
+      },
+    },
+  ],
+});
