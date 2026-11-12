@@ -50,7 +50,11 @@ export default defineSeed({
         preRegistration: { label: "Lien de pré-inscription", type: "url" },
         studentPortal: { label: "Portail élèves" },
         parentPortal: { label: "Portail parents" },
-        heroVideoId: { label: "Vidéo d'arrière-plan de l'accueil (lien YouTube)", type: "youtube" },
+        heroVideoId: {
+          label: "Vidéo d'arrière-plan de l'accueil",
+          type: "video",
+          help: "Collez le lien d'une vidéo YouTube, ou importez une vidéo depuis votre ordinateur (MP4 ou WebM, 80 Mo maximum).",
+        },
         filmVideoId: { label: "Film de l'école (lien YouTube)", type: "youtube" },
         social: { label: "Réseaux sociaux" },
         seo: { label: "Référencement par défaut" },
