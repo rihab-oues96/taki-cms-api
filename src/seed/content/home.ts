@@ -97,9 +97,9 @@ export default defineSeed({
           help: "Collez le lien d'une vidéo YouTube, ou importez une vidéo depuis votre ordinateur (MP4 ou WebM, 80 Mo maximum).",
         },
         "video.filmVideoId": {
-          label: "Film de l'école (lien YouTube)",
-          type: "youtube",
-          help: "Vidéo ouverte par le bouton « regarder la vidéo ».",
+          label: "Film de l'école",
+          type: "video",
+          help: "Vidéo ouverte par le bouton « regarder la vidéo ». Collez le lien d'une vidéo YouTube, ou importez une vidéo depuis votre ordinateur (MP4 ou WebM, 80 Mo maximum).",
         },
         "video.backgroundTitle": { label: "Titre de la vidéo d'arrière-plan (accessibilité)" },
         "video.backgroundStart": { label: "Début de la vidéo d'arrière-plan (secondes)", help: "Pour une vidéo YouTube uniquement." },
@@ -177,7 +177,7 @@ export default defineSeed({
       },
       overrides: {
         text: { label: "Texte de présentation" },
-        videoId: { label: "Visite en vidéo (lien YouTube)", type: "youtube", help: "Vidéo ouverte par le bouton « Visite en vidéo »." },
+        videoId: { label: "Visite en vidéo", type: "video", help: "Vidéo ouverte par le bouton « Visite en vidéo ». Collez le lien d'une vidéo YouTube, ou importez une vidéo depuis votre ordinateur (MP4 ou WebM, 80 Mo maximum)." },
         slides: { label: "Diaporama des espaces" },
         "slides[]": { label: "Espace" },
         "slides[].name": { label: "Nom de l'espace" },

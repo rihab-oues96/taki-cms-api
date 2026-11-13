@@ -1,5 +1,6 @@
 /**
- * One-off migration: the home page background video can now be a YouTube link or an uploaded file.
+ * One-off migration: the home page videos (background, school film, video tour) can now be a
+ * YouTube link or an uploaded file.
  *
  *   npm run migrate:hero-video
  *
@@ -17,6 +18,8 @@ import { SEED_MODULES } from "./content/index.js";
 const TARGETS = [
   { page: "home", key: "hero", path: ["video", "backgroundVideoId"] },
   { page: "home", key: "hero", path: ["video", "backgroundStart"] },
+  { page: "home", key: "hero", path: ["video", "filmVideoId"] },
+  { page: "home", key: "about", path: ["videoId"] },
 ];
 
 function find(fields: FieldDef[], path: string[]): FieldDef | undefined {
