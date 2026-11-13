@@ -21,7 +21,7 @@ export default defineSeed({
       page: "home",
       key: "hero",
       label: "Bannière d'accueil",
-      description: "Grand écran d'ouverture : bandeau d'annonce, titre, boutons et programmes IB. Les vidéos se règlent dans Éléments communs › Identité et coordonnées.",
+      description: "Grand écran d'ouverture : bandeau d'annonce, titre, boutons, vidéos et programmes IB.",
       content: {
         sectionLabel: "Accueil",
         announcement: {
@@ -37,6 +37,8 @@ export default defineSeed({
         watchLabel: "Regarder maintenant",
         cta: { label: "Pré-inscription", href: "/admission" },
         video: {
+          backgroundVideoId: "https://www.youtube.com/watch?v=JKW2o7yF1es",
+          filmVideoId: "https://www.youtube.com/watch?v=qPMY26lwvew",
           backgroundTitle: "Vidéo de présentation TakiAcademy International School",
           backgroundStart: 21,
           playLabel: "Lire la vidéo",
@@ -88,7 +90,17 @@ export default defineSeed({
         lead: { label: "Texte d'introduction", type: "textarea" },
         watchLabel: { label: "Bouton « regarder la vidéo »" },
         cta: { label: "Bouton principal" },
-        video: { label: "Vidéos (libellés et réglages)" },
+        video: { label: "Vidéos" },
+        "video.backgroundVideoId": {
+          label: "Vidéo d'arrière-plan",
+          type: "video",
+          help: "Collez le lien d'une vidéo YouTube, ou importez une vidéo depuis votre ordinateur (MP4 ou WebM, 80 Mo maximum).",
+        },
+        "video.filmVideoId": {
+          label: "Film de l'école (lien YouTube)",
+          type: "youtube",
+          help: "Vidéo ouverte par le bouton « regarder la vidéo ».",
+        },
         "video.backgroundTitle": { label: "Titre de la vidéo d'arrière-plan (accessibilité)" },
         "video.backgroundStart": { label: "Début de la vidéo d'arrière-plan (secondes)", help: "Pour une vidéo YouTube uniquement." },
         "video.playLabel": { label: "Libellé « lire »" },
@@ -121,6 +133,7 @@ export default defineSeed({
         title: "TakiAcademy *International School*",
         text: "Basé à Sahloul 4 à Sousse, TakiAcademy International School est un collège et lycée privé qui propose le Programme d'éducation intermédiaire dans un cadre multiculturel favorisant le développement personnel et académique.",
         cta: { label: "Notre Programme", href: "/middle-education-program" },
+        videoId: "https://www.youtube.com/watch?v=qPMY26lwvew",
         slides: [
           { name: "Le bâtiment", icon: "/media/about/icon-1.png", image: "/media/about/building.jpg", title: "Un établissement sur 4 étages", text: "Notre collège et lycée à Sahloul 4, Sousse : 28 salles de classe réparties sur 4 étages, au service du Programme d'éducation intermédiaire.", caption: "Sahloul 4, Sousse" },
           { name: "Cour centrale", icon: "/media/about/icon-2.png", image: "/media/about/courtyard.jpg", title: "Une cour centrale au cœur de l’école", text: "Les coursives colorées s'ouvrent sur la cour centrale : un espace lumineux qui relie les étages et rythme la vie de l'école.", caption: "Les coursives autour de la cour" },
@@ -164,6 +177,7 @@ export default defineSeed({
       },
       overrides: {
         text: { label: "Texte de présentation" },
+        videoId: { label: "Visite en vidéo (lien YouTube)", type: "youtube", help: "Vidéo ouverte par le bouton « Visite en vidéo »." },
         slides: { label: "Diaporama des espaces" },
         "slides[]": { label: "Espace" },
         "slides[].name": { label: "Nom de l'espace" },

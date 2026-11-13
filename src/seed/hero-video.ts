@@ -15,7 +15,7 @@ import { SEED_MODULES } from "./content/index.js";
 
 /** Section and path (group names, then the field) of every definition to refresh from the seed files. */
 const TARGETS = [
-  { page: "global", key: "site", path: ["heroVideoId"] },
+  { page: "home", key: "hero", path: ["video", "backgroundVideoId"] },
   { page: "home", key: "hero", path: ["video", "backgroundStart"] },
 ];
 
