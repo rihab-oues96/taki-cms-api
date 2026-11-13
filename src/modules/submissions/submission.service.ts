@@ -74,7 +74,7 @@ async function saveWithReference(type: SubmissionType, save: (reference: string)
   }
 }
 
-export async function createContact(input: ContactInput): Promise<{ reference: string }> {
+export async function createContact(input: ContactInput, suspect = false): Promise<{ reference: string }> {
   const fingerprint = fingerprintOf("contact", input);
   const duplicate = await findDuplicate(fingerprint);
   if (duplicate) return { reference: duplicate };
@@ -83,6 +83,7 @@ export async function createContact(input: ContactInput): Promise<{ reference: s
     ContactSubmission.create({
       reference: ref,
       fingerprint,
+      suspect,
       name: input.name,
       email: input.email,
       phone: input.phone,
@@ -93,7 +94,7 @@ export async function createContact(input: ContactInput): Promise<{ reference: s
   return { reference };
 }
 
-export async function createAdmission(input: AdmissionInput): Promise<{ reference: string }> {
+export async function createAdmission(input: AdmissionInput, suspect = false): Promise<{ reference: string }> {
   const fingerprint = fingerprintOf("admission", input);
   const duplicate = await findDuplicate(fingerprint);
   if (duplicate) return { reference: duplicate };
@@ -103,6 +104,7 @@ export async function createAdmission(input: AdmissionInput): Promise<{ referenc
     AdmissionSubmission.create({
       reference: ref,
       fingerprint,
+      suspect,
       name: `${input.parentFirstName} ${input.parentLastName}`,
       email: input.parentEmail,
       phone: input.parentPhone,
@@ -127,7 +129,7 @@ export async function createAdmission(input: AdmissionInput): Promise<{ referenc
   return { reference };
 }
 
-export async function createJob(input: JobInput, file: Express.Multer.File | undefined): Promise<{ reference: string }> {
+export async function createJob(input: JobInput, file: Express.Multer.File | undefined, suspect = false): Promise<{ reference: string }> {
   const rule = checkCv(file);
   const upload = file as Express.Multer.File;
   const fingerprint = fingerprintOf("job", input, createHash("sha256").update(upload.buffer).digest("hex"));
@@ -140,6 +142,7 @@ export async function createJob(input: JobInput, file: Express.Multer.File | und
       JobSubmission.create({
         reference: ref,
         fingerprint,
+        suspect,
         name: input.name,
         email: input.email,
         phone: input.phone,
@@ -172,6 +175,7 @@ function toListItem(s: SubmissionDoc) {
     subject: s.subject,
     hasCv: s.type === "job",
     hasNote: s.note !== "",
+    suspect: s.suspect === true,
     createdAt: s.createdAt,
   };
 }
@@ -303,6 +307,7 @@ const COMMON_COLUMNS: Column[] = [
   ["Nom", (s) => s.name],
   ["E-mail", (s) => s.email],
   ["Téléphone", (s) => s.phone],
+  ["À vérifier (envoi automatique possible)", (s) => (s.suspect ? "Oui" : "")],
 ];
 
 const only = <T extends SubmissionType>(type: T, value: (s: Extract<SubmissionDoc, { type: T }>) => string) => {
