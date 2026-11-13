@@ -75,7 +75,7 @@ const link = z.preprocess(
     }, "Lien invalide : il doit commencer par https://"),
 );
 
-/** Hidden input that people never see: only robots fill it (see the controller). */
+/** Hidden input that people never see: mostly robots fill it; the submission is then flagged (see the controller). */
 const honeypot = { website: z.preprocess(oneLine, z.string().max(500)).optional() };
 
 export const contactSchema = z.object({

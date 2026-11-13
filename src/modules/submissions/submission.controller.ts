@@ -15,32 +15,32 @@ import * as service from "./submission.service.js";
 /* ------------------------------------------------------------------ */
 
 /**
- * A filled honeypot means a robot. It gets the same answer as a real visitor (so it has
- * nothing to adapt to) but nothing is stored.
+ * A filled honeypot usually means a robot, but browsers' autofill and form-filling
+ * extensions fill it for real visitors too. The visitor is told the form was received, so
+ * it is always stored: flagged as suspect for the team to check, never silently dropped.
  */
-function trapped(req: Request, res: Response, type: SubmissionType): boolean {
+function suspect(req: Request, type: SubmissionType): boolean {
   if (!req.body.website) return false;
-  logger.info({ type, ip: clientIp(req) }, "Form submission dropped (honeypot)");
-  created(res, { reference: service.newReference(type) });
+  logger.warn({ type, ip: clientIp(req) }, "Form submission flagged as suspect (honeypot filled)");
   return true;
 }
 
 export async function createContact(req: Request, res: Response) {
-  if (trapped(req, res, "contact")) return;
+  const flagged = suspect(req, "contact");
   const { website: _website, ...input } = req.body;
-  created(res, await service.createContact(input));
+  created(res, await service.createContact(input, flagged));
 }
 
 export async function createAdmission(req: Request, res: Response) {
-  if (trapped(req, res, "admission")) return;
+  const flagged = suspect(req, "admission");
   const { website: _website, ...input } = req.body;
-  created(res, await service.createAdmission(input));
+  created(res, await service.createAdmission(input, flagged));
 }
 
 export async function createJob(req: Request, res: Response) {
-  if (trapped(req, res, "job")) return;
+  const flagged = suspect(req, "job");
   const { website: _website, ...input } = req.body;
-  created(res, await service.createJob(input, req.file));
+  created(res, await service.createJob(input, req.file, flagged));
 }
 
 /* ------------------------------------------------------------------ */

@@ -26,6 +26,8 @@ const submissionSchema = new Schema(
     note: { type: String, default: "", maxlength: 2000 },
     /** Hash of the content, used to recognise the same form sent twice. */
     fingerprint: { type: String, required: true },
+    /** The hidden anti-robot field was filled: probably a robot, but kept so that no real request is ever lost. */
+    suspect: { type: Boolean, default: false },
     statusUpdatedAt: { type: Date, default: null },
     updatedBy: { type: Schema.Types.ObjectId, ref: "User", default: null },
     updatedByName: { type: String, default: "" },
@@ -144,6 +146,7 @@ interface SubmissionBase {
   subject: string;
   note: string;
   fingerprint: string;
+  suspect?: boolean;
   statusUpdatedAt: Date | null;
   updatedByName: string;
   createdAt: Date;
