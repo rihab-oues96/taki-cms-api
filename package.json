@@ -15,6 +15,7 @@
     "seed": "tsx src/seed/index.ts",
     "migrate:youtube-links": "tsx src/seed/youtube-links.ts",
     "migrate:hero-video": "tsx src/seed/hero-video.ts",
+    "migrate:video-settings": "tsx src/seed/video-settings.ts",
     "migrate:forms": "tsx src/seed/forms.ts",
     "migrate:team": "tsx src/seed/team.ts",
     "migrate:files": "tsx src/seed/files-to-db.ts",

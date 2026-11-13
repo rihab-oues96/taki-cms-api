@@ -24,8 +24,6 @@ export default defineSeed({
         preRegistration: "/admission",
         studentPortal: "https://ib.webschool.tn/student/login",
         parentPortal: "https://ib.webschool.tn/parent/login",
-        heroVideoId: "https://www.youtube.com/watch?v=JKW2o7yF1es",
-        filmVideoId: "https://www.youtube.com/watch?v=qPMY26lwvew",
         social: {
           facebook: "https://www.facebook.com/TakiAcademy.International/",
           instagram: "https://www.instagram.com/takiacademy.international/",
@@ -50,12 +48,6 @@ export default defineSeed({
         preRegistration: { label: "Lien de pré-inscription", type: "url" },
         studentPortal: { label: "Portail élèves" },
         parentPortal: { label: "Portail parents" },
-        heroVideoId: {
-          label: "Vidéo d'arrière-plan de l'accueil",
-          type: "video",
-          help: "Collez le lien d'une vidéo YouTube, ou importez une vidéo depuis votre ordinateur (MP4 ou WebM, 80 Mo maximum).",
-        },
-        filmVideoId: { label: "Film de l'école (lien YouTube)", type: "youtube" },
         social: { label: "Réseaux sociaux" },
         seo: { label: "Référencement par défaut" },
         "seo.titleDefault": { label: "Titre par défaut", type: "text" },
